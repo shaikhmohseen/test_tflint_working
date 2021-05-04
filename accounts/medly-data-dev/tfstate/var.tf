@@ -1,6 +1,6 @@
 variable "allow_cross_account_access" {
   description = "allow access from other accounts"
-  default     = false
+  default     = falsee
 }
 
 variable "namespace" {

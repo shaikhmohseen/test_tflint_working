@@ -1,0 +1,6 @@
+aws_region            = "us-east-1"
+domain_name           = "uat-medly.io"
+subdomain_internal    = "api-gw"
+subdomain_partners    = "api"
+cloudfront_log_bucket = "medly-uat-logs.s3.amazonaws.com"
+cloudfront_log_prefix = "cloudfront-proxy-logs"

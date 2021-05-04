@@ -1,0 +1,5 @@
+deployment_account = "medly-uat"
+service_name       = "delivery-hospitals-service"
+env                = "uat"
+aws_profile        = "medly-uat"
+aws_region         = "us-east-1"

@@ -1,0 +1,5 @@
+deployment_account = "medly-dev"
+service_name       = "consumer-profile-service"
+env                = "dev"
+aws_profile        = "medly-dev"
+aws_region         = "us-east-1"

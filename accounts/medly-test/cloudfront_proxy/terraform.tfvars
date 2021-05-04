@@ -1,0 +1,7 @@
+aws_profile           = "medly-test"
+aws_region            = "us-east-1"
+domain_name           = "test-medly.io"
+subdomain_internal    = "api-gw"
+subdomain_partners    = "api"
+cloudfront_log_bucket = "medly-test-logs.s3.amazonaws.com"
+cloudfront_log_prefix = "cloudfront-proxy-logs"

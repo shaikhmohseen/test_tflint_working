@@ -1,0 +1,12 @@
+deployment_account               = "medly-prod"
+service_name                     = "satellite-app"
+aws_region                       = "us-east-1"
+env                              = "prod"
+domain_name                      = "medly.io"
+amplify_repository_url           = "https://github.com/medlypharmacy/satellite-app"
+amplify_github_enabled           = false
+amplify_branch_patterns          = "sat-*,SAT-*"
+amplify_subdomain                = "satellite"
+amplify_backend_apigw_invoke_url = "https://api-gw.medly.io"
+env_vars_secret_key              = "satellite-app-env"
+npm_token                        = ""

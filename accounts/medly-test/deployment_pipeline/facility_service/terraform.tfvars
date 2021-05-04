@@ -1,0 +1,5 @@
+deployment_account = "medly-test"
+service_name       = "facility-service"
+env                = "test"
+aws_profile        = "medly-test"
+aws_region         = "us-east-1"

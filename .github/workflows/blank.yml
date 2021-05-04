@@ -1,0 +1,24 @@
+name: linter
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tflint:
+    runs-on: ubuntu-latest
+
+
+
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout source code
+
+    - uses: terraform-linters/setup-tflint@v1
+      name: Setup TFLint
+      with:
+        tflint_version: v0.26.0
+
+    - name: Run TFLint
+      run: tflint -f compact

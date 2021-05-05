@@ -1,8 +1,0 @@
-aws_region                        = "us-east-1"
-env                               = "dev"
-lambda_account_arn                = "arn:aws:iam::592280881349:role/deployment-dev-us-east-1-lambdaRole"
-service_name                      = "deployment"
-dev_terraform_state_bucket        = "medly-dev-terraform-state"
-dev_terraform_state_s3_module_key = "global/s3/terraform.tfstate"
-dev_aws_profile                   = "medly-dev"
-dev_aws_region                    = "us-east-1"

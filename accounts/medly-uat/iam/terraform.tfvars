@@ -1,1 +1,0 @@
-deployment_account = "medly-uat"

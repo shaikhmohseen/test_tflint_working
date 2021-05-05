@@ -1,5 +1,0 @@
-deployment_account = "medly-dev"
-service_name       = "rx-task-service"
-env                = "dev"
-aws_profile        = "medly-dev"
-aws_region         = "us-east-1"

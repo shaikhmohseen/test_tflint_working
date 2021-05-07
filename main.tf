@@ -10,7 +10,9 @@
 ##################################################################################
 
 provider "aws" {
+  deep_check = true
   profile = "deep-dive"
+
   region  = "ap-south-1"
 }
 
@@ -127,9 +129,7 @@ resource "aws_instance" "Linux" {
 
 }
 
-##################################################################################
-# OUTPUT
-##################################################################################
+//OUTPUT
 
 output "aws_instance_public_dns" {
   value = aws_instance.Linux.public_dns

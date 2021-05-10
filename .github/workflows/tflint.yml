@@ -1,0 +1,30 @@
+name: tflint
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  tflint:
+    name: 'Terraform Lint'
+    runs-on: ubuntu-latest
+
+
+
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout source code
+
+    - uses: terraform-linters/setup-tflint@v1
+      name: Setup TFLint
+      with:
+        tflint_version: v0.26.0
+    
+    - name: Run TFLint
+      run: tflint --config .tflint.hcl
+      
+      #if your repository dont have .tflint.hcl file, default linting rules are tested 
+      #if your repository have .tflint.hcl file it will add more rules to default tflint rules 
+      #not having .tflint.hcl file will not harm execution , tflint will execute default rule set it have.

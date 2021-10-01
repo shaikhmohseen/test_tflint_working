@@ -31,3 +31,13 @@ jobs:
       id: fmt
       run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
       continue-on-error: false
+
+    - name: Send mail
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        subject: Github Actions job result
+        to: shaikhmr7786@gmail.com,mohseen.shaikh@medly.com
+        from: Mohseen Shaikh # <user@example.com>

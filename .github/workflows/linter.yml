@@ -37,7 +37,7 @@ jobs:
       with:
         status: ${{ job.status }} # required
       env:
-        SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+        SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
 
     #    - name: Send mail
 #      if: always()

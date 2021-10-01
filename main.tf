@@ -56,7 +56,7 @@ resource "aws_vpc" "myvpc" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_subnet" "public-subnet" {
+    resource "aws_subnet" "public-subnet" {
   cidr_block              = "10.0.0.0/28"
   vpc_id                  = aws_vpc.myvpc.id
   availability_zone       = data.aws_availability_zones.available.names[0]

@@ -18,7 +18,7 @@ provider "aws" {
 # DATA
 ##################################################################################
 
-data "aws_ami" "aws-linux" {
+   data "aws_ami" "aws-linux" {
   most_recent = true
   owners      = ["amazon"]
 

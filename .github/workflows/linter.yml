@@ -39,6 +39,7 @@ jobs:
       run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
       continue-on-error: false
 
+
     - uses: ravsamhq/notify-slack-action@v1
       if: always()
       with:

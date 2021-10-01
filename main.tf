@@ -127,9 +127,7 @@ resource "aws_instance" "Linux" {
 
 }
 
-##################################################################################
-# OUTPUT
-##################################################################################
+//OUTPUT
 
 output "aws_instance_public_dns" {
   value = aws_instance.Linux.public_dns

@@ -32,20 +32,20 @@ jobs:
 #    - name: Run TFLint
 #      run: tflint -f compact
 
+    - name: Send GitHub Action trigger data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.14.0
+      if: always()
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
     - name: Terraform fmt
       id: fmt
       run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
       continue-on-error: false
 
-    - name: Send GitHub Action trigger data to Slack workflow
-      id: slack
-      uses: slackapi/slack-github-action@v1.14.0
-      if: always()
-      with:
-        channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-        slack-message: 'posting from a github action!'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 
 
     - uses: ravsamhq/notify-slack-action@v1

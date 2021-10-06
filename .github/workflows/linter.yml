@@ -20,7 +20,7 @@ jobs:
     - name: Publish SNS Topic
       uses: nothingalike/sns-publish-topic@v1.6
       with:
-        MESSAGE: "Hii sending using github actions"+ ${{ job.status }}
+        MESSAGE: "Hii sending using github actions " + { job.status }
         TOPIC_ARN: ${{ secrets.AWS_SNS_TOPIC_ARN }}
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}

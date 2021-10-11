@@ -46,13 +46,14 @@ jobs:
 #        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SNS_SECRET_ACCESS_KEY }}
 
     - name: Configure AWS Credentials
+      if: ${{ always() }}
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_SNS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SNS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Sync s3 bucket
+    - name: Publish sns message
       if: ${{ always() }}
       run: |
         aws sns publish \

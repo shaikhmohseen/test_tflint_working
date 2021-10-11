@@ -112,7 +112,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-resource "aws_instance" "Linux" {
+    resource "aws_instance" "Linux" {
   ami                    = data.aws_ami.aws-linux.id
   instance_type          = "t2.micro"
   key_name               = var.key_name

@@ -32,15 +32,29 @@ jobs:
       run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
       continue-on-error: false
 
-    - name: Publish SNS Topic
-      uses: nothingalike/sns-publish-topic@v1.6
-      if: ${{ always() }}
-      with:
-        MESSAGE: "[testing] Medly e2e tests status: ${{ job.status }}
-          You can visit mentioned url to see reports: http://medly-ios.medly.dev/"
+#    - name: Publish SNS Topic
+#      uses: nothingalike/sns-publish-topic@v1.6
+#      if: ${{ always() }}
+#      with:
+#        MESSAGE: "[testing] Medly e2e tests status: ${{ job.status }}
+#          You can visit mentioned url to see reports: http://medly-ios.medly.dev/"
+#
+#        TOPIC_ARN: ${{ secrets.AWS_SNS_TOPIC_ARN }}
+#      env:
+#        AWS_REGION: ${{ secrets.AWS_REGION }}
+#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SNS_ACCESS_KEY_ID }}
+#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SNS_SECRET_ACCESS_KEY }}
 
-        TOPIC_ARN: ${{ secrets.AWS_SNS_TOPIC_ARN }}
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SNS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SNS_SECRET_ACCESS_KEY }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_SNS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SNS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Sync s3 bucket
+      if: ${{ always() }}
+      run: |
+        aws sns publish \
+            --topic-arn ${{ secrets.AWS_SNS_TOPIC_ARN }} \
+            --message "[testing sending using github actions using aws cli] Medly e2e tests status: ${{ job.status }}. You can visit mentioned url to see reports: http://medly-ios.medly.dev/"

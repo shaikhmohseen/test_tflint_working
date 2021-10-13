@@ -36,7 +36,7 @@ jobs:
         web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
         role-to-assume: ${{ env.AWS_ROLE_ARN }}
         role-duration-seconds: 1800
-        #role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
+        role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
 
     - name: Publish sns message
       if: ${{ always() }}

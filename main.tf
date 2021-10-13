@@ -135,14 +135,3 @@ output "aws_instance_public_dns" {
   value = aws_instance.Linux.public_dns
 }
 
-
-################
-output "sns_user_access_key_id" {
-  value     = module.sns_user.access_key_id
-  sensitive = true
-}
-
-output "sns_user_access_key_secret" {
-  value     = module.sns_user.access_key_secret
-  sensitive = true
-}

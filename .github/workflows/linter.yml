@@ -58,4 +58,4 @@ jobs:
       run: |
         aws sns publish \
             --topic-arn ${{ secrets.AWS_SNS_TOPIC_ARN }} \
-            --message "[testing sending using github actions using aws cli] Medly e2e tests status: ${{ job.status }}. You can visit mentioned url to see reports: http://medly-ios.medly.dev/"
+            --message "Medly ios-e2e test execution status: ${{ job.status }}. You can visit mentioned url to see testcase reports: http://medly-ios.medly.dev/"

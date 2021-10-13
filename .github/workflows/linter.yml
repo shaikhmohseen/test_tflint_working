@@ -3,31 +3,55 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    
+env:
+  ENV: dev
+  AWS_ROLE_ARN: ${{ secrets.SNS_ROLE_ARN }}
+  AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
+  AWS_REGION: us-east-1
+  TRIGGER: github
+  TF_ROLE: plan
 
 jobs:
   tflint:
     runs-on: ubuntu-latest
-
-
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
     - uses: actions/checkout@v1
       name: Checkout source code
 
-    - uses: hashicorp/setup-terraform@v1
+    - name: Set REPO_NAME
+      run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
+
+    - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
+      run: >
+        curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@master
       with:
-        terraform_version: 1.0.5
+        aws-region: ${{ env.AWS_REGION }}
+        web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
+        role-to-assume: ${{ env.AWS_ROLE_ARN }}
+        role-duration-seconds: 1800
+        role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
 
-    - uses: terraform-linters/setup-tflint@v1
-      name: Setup TFLint
-      with:
-        tflint_version: v0.26.0
 
-    - name: Run TFLint
-      run: tflint -f compact
+#    - uses: hashicorp/setup-terraform@v1
+#      with:
+#        terraform_version: 1.0.5
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
-      continue-on-error: false
+#    - uses: terraform-linters/setup-tflint@v1
+#      name: Setup TFLint
+#      with:
+#        tflint_version: v0.26.0
+
+#    - name: Run TFLint
+#      run: tflint -f compact
+#
+#    - name: Terraform fmt
+#      id: fmt
+#      run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
+#      continue-on-error: false

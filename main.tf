@@ -110,7 +110,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-resource "aws_instance" "Linux" {
+    resource "aws_instance" "Linux" {
   ami                    = data.aws_ami.aws-linux.id
   instance_type          = "t2.micro"
   key_name               = var.key_name
@@ -131,4 +131,16 @@ resource "aws_instance" "Linux" {
 
 output "aws_instance_public_dns" {
   value = aws_instance.Linux.public_dns
+}
+
+
+################
+output "sns_user_access_key_id" {
+  value     = module.sns_user.access_key_id
+  sensitive = true
+}
+
+output "sns_user_access_key_secret" {
+  value     = module.sns_user.access_key_secret
+  sensitive = true
 }

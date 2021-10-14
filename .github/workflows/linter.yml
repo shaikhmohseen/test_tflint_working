@@ -4,10 +4,11 @@ on:
     branches: [ main ]
   pull_request:
 env:
+  AWS_ROLE_ARN: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
   AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
   AWS_REGION: us-east-1
-
-
+  TRIGGER: github
+  TF_ROLE: plan
 jobs:
   tflint:
     runs-on: ubuntu-latest
@@ -15,30 +16,30 @@ jobs:
       id-token: write
       contents: read
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout source code
+      - uses: actions/checkout@v1
+        name: Checkout source code
 
-    - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
-      run: >
-        curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
+      - name: Set REPO_NAME
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@master
-      with:
-        aws-region: ${{ env.AWS_REGION }}
-        web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
-        role-to-assume: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
-        role-duration-seconds: 1800
-
-    - name: Publish sns message
-      if: ${{ always() }}
-      run: |
-        aws sns publish \
-            --topic-arn ${{ secrets.AWS_SNS_ALERTS_TOPIC_ARN }} \
-            --message "Medly iOs-e2e tests status: ${{ job.status }}. You can visit mentioned url to see test reports: https://medly-ios.medly.dev/test-reports/"
-
-
+      - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
+        run: >
+          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-duration-seconds: 1800
+          role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
+      - name: Publish sns message
+        if: ${{ always() }}
+        run: |
+          aws sns publish \
+              --topic-arn ${{ secrets.AWS_SNS_ALERTS_TOPIC_ARN }} \
+              --message "Medly iOs-e2e tests status: ${{ job.status }}. You can visit mentioned url to see test reports: https://medly-ios.medly.dev/test-reports/"
 
 #    - uses: hashicorp/setup-terraform@v1
 #      with:

@@ -3,31 +3,57 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    
+env:
+  AWS_ROLE_ARN: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
+  AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
+  AWS_REGION: us-east-1
 
 jobs:
   tflint:
     runs-on: ubuntu-latest
-
-
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout source code
+      - uses: actions/checkout@v1
+        name: Checkout source code
 
-    - uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: 1.0.5
+      - name: Set REPO_NAME
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
 
-    - uses: terraform-linters/setup-tflint@v1
-      name: Setup TFLint
-      with:
-        tflint_version: v0.26.0
+      - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
+        run: >
+          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
 
-    - name: Run TFLint
-      run: tflint -f compact
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
+          role-to-assume: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
+          role-duration-seconds: 1800
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
-      continue-on-error: false
+      - name: Publish sns message
+        if: ${{ always() }}
+        run: |
+          aws sns publish \
+              --topic-arn ${{ secrets.AWS_SNS_ALERTS_TOPIC_ARN }} \
+              --message "Medly iOs-e2e tests status: ${{ job.status }}. You can visit mentioned url to see test reports: https://medly-ios.medly.dev/test-reports/"
+
+#    - uses: hashicorp/setup-terraform@v1
+#      with:
+#        terraform_version: 1.0.5
+
+#    - uses: terraform-linters/setup-tflint@v1
+#      name: Setup TFLint
+#      with:
+#        tflint_version: v0.26.0
+
+#    - name: Run TFLint
+#      run: tflint -f compact
+#
+#    - name: Terraform fmt
+#      id: fmt
+#      run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
+#      continue-on-error: false

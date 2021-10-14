@@ -43,7 +43,7 @@ jobs:
       run: |
         aws sns publish \
             --topic-arn ${{ secrets.AWS_SNS_TOPIC_ARN }} \
-            --message "[testing sending using github actions using aws cli] Medly e2e tests status: ${{ job.status }}. You can visit mentioned url to see reports: http://medly-ios.medly.dev/"
+            --message "Medly iOs-e2e tests status: ${{ job.status }}. You can visit mentioned url to see test reports: http://medly-ios.medly.dev/"
 
 #    - uses: hashicorp/setup-terraform@v1
 #      with:

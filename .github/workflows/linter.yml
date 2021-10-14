@@ -4,6 +4,7 @@ on:
     branches: [ main ]
   pull_request:
 env:
+  AWS_ROLE_ARN: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
   AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
   AWS_REGION: us-east-1
   TRIGGER: github
@@ -30,7 +31,7 @@ jobs:
         with:
           aws-region: ${{ env.AWS_REGION }}
           web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
-          role-to-assume: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
           role-duration-seconds: 1800
           role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
       - name: Publish sns message

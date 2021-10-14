@@ -20,8 +20,8 @@ jobs:
     - uses: actions/checkout@v1
       name: Checkout source code
 
-    - name: Set REPO_NAME
-      run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
+#    - name: Set REPO_NAME
+#      run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
 
     - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
       run: >

@@ -7,7 +7,6 @@ env:
   AWS_ROLE_ARN: ${{ secrets.SNS_ROLE_ARN }}
   AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
   AWS_REGION: us-east-1
-  TF_ROLE: plan
 
 jobs:
   tflint:
@@ -18,9 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       name: Checkout source code
-
-    - name: Set REPO_NAME
-      run: echo "REPO_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
 
     - name: Get AWS_WEB_IDENTITY_TOKEN_FILE contents
       run: >
@@ -34,7 +30,6 @@ jobs:
         web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
         role-to-assume: ${{ env.AWS_ROLE_ARN }}
         role-duration-seconds: 1800
-        role-session-name: github-actions-${{ env.TF_ROLE }}-${{ env.REPO_NAME }}
 
     - name: Publish sns message
       if: ${{ always() }}

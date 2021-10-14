@@ -7,8 +7,7 @@ env:
   AWS_ROLE_ARN: ${{ secrets.AWS_SNS_ALERTS_ROLE_ARN }}
   AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awstoken
   AWS_REGION: us-east-1
-  TRIGGER: github
-  TF_ROLE: plan
+
 jobs:
   tflint:
     runs-on: ubuntu-latest
@@ -28,7 +27,7 @@ jobs:
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
           aws-region: ${{ env.AWS_REGION }}
           web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}

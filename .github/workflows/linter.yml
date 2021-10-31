@@ -9,8 +9,6 @@ jobs:
   tflint:
     runs-on: ubuntu-latest
 
-
-
     steps:
     - uses: actions/checkout@v1
       name: Checkout source code
@@ -18,16 +16,59 @@ jobs:
     - uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.0.5
+#
+#    - uses: terraform-linters/setup-tflint@v1
+#      name: Setup TFLint
+#      with:
+#        tflint_version: v0.26.0
 
-    - uses: terraform-linters/setup-tflint@v1
-      name: Setup TFLint
-      with:
-        tflint_version: v0.26.0
+#    - uses: actions/checkout@v2
+#    - name: Slack Notification
+#      uses: rtCamp/action-slack-notify@v2
+#      if: always()
+#      env:
+#        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+#
+#    - name: Run TFLint
+#      run: tflint -f compact
 
-    - name: Run TFLint
-      run: tflint -f compact
+    - name: Send GitHub Action trigger data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.14.0
+      if: always()
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 
     - name: Terraform fmt
       id: fmt
       run: terraform fmt -list=true -write=false -diff=true -check=true -recursive
       continue-on-error: false
+
+
+
+
+    - uses: ravsamhq/notify-slack-action@v1
+      if: always()
+      with:
+        status: ${{ job.status }} # required
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
+
+
+
+
+#    - name: Send mail
+#      if: always()
+#      uses: dawidd6/action-send-mail@v3
+#      with:
+#        server_address: smtp.gmail.com
+#        server_port: 465
+#        username: ${{ secrets.EMAIL_USERNAME }}
+#        password: ${{ secrets.EMAIL_PASSWORD }}
+#        subject: Github Actions job result
+#        to: shaikhmr7786@gmail.com,mohseen.shaikh@medly.com
+#        from: Mohseen Shaikh # <user@example.com>
+

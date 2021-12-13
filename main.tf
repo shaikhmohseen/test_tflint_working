@@ -10,13 +10,13 @@ provider "aws" {
   profile = "deep-dive"
   region  = "ap-south-1"
 }
-
-
 ##################################################################################
 # DATA
 ##################################################################################
 
-data "aws_ami" "aws-linux" {
+
+
+data "aws_a mi" "aws-linux" {
   most_recent = true
   owners      = ["amazon"]
 

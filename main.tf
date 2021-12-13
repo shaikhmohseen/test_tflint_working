@@ -11,6 +11,8 @@ variable "region" {
 # PROVIDERS
 ##################################################################################
 
+
+
 provider "aws" {
   profile = "deep-dive"
   region  = "ap-south-1"
